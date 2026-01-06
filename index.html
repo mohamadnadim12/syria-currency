@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="محول العملة السورية الجديد - نظام إصلاح العملة المقترح (علم الاستقلال). أداة احترافية لحساب وحذف الأصفار.">
+    <meta name="author" content="Mohamad Nadim">
+    
+    <!-- Open Graph / Facebook / WhatsApp -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="المحول الملكي - عملة الاستقلال">
+    <meta property="og:description" content="أداة تحويل العملة السورية بتصميم احترافي (1:100).">
+    
+    <title>المحول الملكي - عملة الاستقلال</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        flag: {
+                            green: '#006633', // Deep Royal Green
+                            red: '#D60025',   // Vibrant Red
+                            black: '#121212', // Pure Black
+                            gold: '#C5A059',  // Muted Gold
+                            offwhite: '#F9FAFB'
+                        }
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'premium': '0 20px 60px -15px rgba(0, 0, 0, 0.15)',
+                        'inner-glow': 'inset 0 2px 4px 0 rgba(255, 255, 255, 0.3)',
+                    },
+                    backgroundImage: {
+                        'currency-pattern': "url(\"data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23C5A059' fill-opacity='0.05'%3E%3Cpath d='M50 50c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10s-10-4.477-10-10 4.477-10 10-10zM10 10c0-5.523 4.477-10 10-10s10 4.477 10 10-4.477 10-10 10c0 5.523-4.477 10-10 10S0 25.523 0 20s4.477-10 10-10zm10 8c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8zm40 40c4.418 0 8-3.582 8-8s-3.582-8-8-8-8 3.582-8 8 3.582 8 8 8z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E\")"
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #f0f2f5;
+            background-image: radial-gradient(circle at top right, #eef2f6, #e2e8f0);
+            min-height: 100vh;
+        }
+
+        /* Glassmorphism Header */
+        .glass-header {
+            background: linear-gradient(135deg, #006633 0%, #004d26 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .glass-header::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.3;
+        }
+
+        /* Custom Input Styling */
+        .custom-input-group {
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: white;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .custom-input-group:focus-within {
+            border-color: #006633;
+            box-shadow: 0 4px 20px rgba(0, 102, 51, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .custom-input-group:focus-within label {
+            color: #006633;
+        }
+
+        /* Gold Gradient Text */
+        .text-gold-gradient {
+            background: linear-gradient(to right, #b88a44, #e5c57f, #b88a44);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: shine 4s linear infinite;
+        }
+
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+
+        /* Floating Stars */
+        .star-emboss {
+            filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));
+            transition: transform 0.3s ease;
+        }
+        .star-emboss:hover { transform: scale(1.1) rotate(5deg); }
+
+        /* History Scrollbar */
+        .history-scroll::-webkit-scrollbar { width: 4px; }
+        .history-scroll::-webkit-scrollbar-track { background: #374151; }
+        .history-scroll::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+
+        .btn-gold {
+            background: linear-gradient(to bottom, #fbf2d5, #ecc987);
+            border: 1px solid #d4af37;
+            color: #785a15;
+            transition: all 0.2s;
+        }
+        .btn-gold:hover { filter: brightness(1.05); }
+        .btn-gold:active { transform: scale(0.98); }
+    </style>
+</head>
+<body class="flex items-center justify-center p-4">
+
+    <div class="w-full max-w-md relative z-10">
+        
+        <!-- Decorative Glows -->
+        <div class="absolute -top-10 -right-10 w-40 h-40 bg-green-500 rounded-full blur-[80px] opacity-20 animate-pulse"></div>
+        <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-red-500 rounded-full blur-[80px] opacity-20 animate-pulse"></div>
+
+        <!-- Main Card -->
+        <div class="bg-white rounded-[2rem] shadow-premium overflow-hidden border border-white/60 relative">
+            
+            <!-- 1. HEADER (Green with Pattern) -->
+            <div class="glass-header px-8 pt-10 pb-16 text-center text-white relative rounded-b-[40%] shadow-lg z-20">
+                <h1 class="text-3xl font-black mb-1 tracking-wide">العملة الوطنية</h1>
+                <div class="flex items-center justify-center gap-2 text-green-100/80 text-sm font-light">
+                    <span>نظام الإصلاح النقدي</span>
+                    <span class="w-1 h-1 bg-green-300 rounded-full"></span>
+                    <span>1:100</span>
+                </div>
+            </div>
+
+            <!-- 2. BODY (White with Stars) -->
+            <div class="px-6 pb-8 -mt-10 relative z-30">
+                
+                <!-- Three Stars Badge -->
+                <div class="bg-white w-max mx-auto px-6 py-3 rounded-full shadow-lg flex gap-4 items-center mb-8 border border-gray-50">
+                    <svg class="w-6 h-6 text-flag-red star-emboss" fill="currentColor" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                    <svg class="w-8 h-8 text-flag-red star-emboss relative -top-1" fill="currentColor" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                    <svg class="w-6 h-6 text-flag-red star-emboss" fill="currentColor" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                </div>
+
+                <!-- Inputs Section -->
+                <div class="space-y-6">
+                    
+                    <!-- OLD Amount -->
+                    <div class="custom-input-group rounded-2xl p-4">
+                        <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-1 transition-colors">المبلغ الحالي (قديم)</label>
+                        <div class="flex items-end gap-3">
+                            <span class="text-sm font-bold text-gray-300 mb-1">SYP</span>
+                            <input type="text" id="oldInput" placeholder="0" inputmode="numeric"
+                                class="w-full bg-transparent text-xl font-bold text-gray-800 focus:outline-none text-left dir-ltr placeholder-gray-200"
+                                oninput="handleInput('old')" onfocus="this.select()">
+                        </div>
+                    </div>
+
+                    <!-- Divider with Icon -->
+                    <div class="flex items-center justify-center -my-3 relative z-10">
+                        <div class="bg-flag-gold p-1.5 rounded-full shadow-md text-white">
+                            <svg class="w-4 h-4 transform rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"></path></svg>
+                        </div>
+                    </div>
+
+                    <!-- NEW Amount (Hero) -->
+                    <div class="custom-input-group rounded-2xl p-5 border-flag-green/30 bg-green-50/30 bg-currency-pattern">
+                        <div class="flex justify-between items-center mb-2">
+                            <label class="block text-xs font-bold text-flag-green uppercase tracking-wider">القيمة الجديدة</label>
+                            <button onclick="copyResult()" class="text-[10px] bg-white border border-green-200 text-flag-green px-2 py-1 rounded-md hover:bg-green-50 transition-colors shadow-sm flex items-center gap-1">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
+                                نسخ
+                            </button>
+                        </div>
+                        <div class="flex items-end gap-3">
+                            <span class="text-sm font-bold text-flag-green/50 mb-1.5">New</span>
+                            <input type="text" id="newInput" placeholder="0" inputmode="numeric"
+                                class="w-full bg-transparent text-3xl font-black text-flag-green focus:outline-none text-left dir-ltr placeholder-green-100"
+                                oninput="handleInput('new')" onfocus="this.select()">
+                        </div>
+                        
+                        <!-- Tafqeet Line -->
+                        <div class="mt-4 pt-3 border-t border-green-100">
+                            <p id="tafqeetResult" class="text-sm font-medium text-gray-500 text-center leading-relaxed">صفر ليرة سورية</p>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Quick Actions (Gold Buttons) -->
+                <div class="grid grid-cols-4 gap-2 mt-6">
+                    <button onclick="quickAdd(1000)" class="btn-gold py-2.5 rounded-xl text-xs font-bold shadow-sm">+1000</button>
+                    <button onclick="quickAdd(25000)" class="btn-gold py-2.5 rounded-xl text-xs font-bold shadow-sm">+25K</button>
+                    <button onclick="quickAdd(50000)" class="btn-gold py-2.5 rounded-xl text-xs font-bold shadow-sm">+50K</button>
+                    <button onclick="resetAll()" class="bg-gray-100 text-gray-500 py-2.5 rounded-xl text-xs font-bold hover:bg-red-50 hover:text-red-500 transition-colors shadow-inner flex items-center justify-center">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- 3. FOOTER (Black - History) -->
+            <div class="bg-flag-black text-gray-400 p-6 relative">
+                <!-- Inner Shadow for depth -->
+                <div class="absolute top-0 left-0 right-0 h-6 bg-gradient-to-b from-black/20 to-transparent pointer-events-none"></div>
+
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="text-[10px] font-bold text-flag-gold uppercase tracking-[0.2em] flex items-center gap-2">
+                        <span class="w-1.5 h-1.5 rounded-full bg-flag-gold"></span>
+                        سجل العمليات
+                    </h3>
+                    <button onclick="clearHistory()" class="text-[10px] hover:text-white transition-colors">مسح السجل</button>
+                </div>
+                
+                <ul id="historyList" class="space-y-2 max-h-28 overflow-y-auto history-scroll pr-2">
+                    <li class="text-center text-xs text-gray-600 py-4 italic" id="emptyMsg">لم تقم بأي عملية تحويل بعد</li>
+                </ul>
+                
+                <!-- Github Credits -->
+                <div class="text-center mt-6 pt-4 border-t border-white/10 opacity-50 hover:opacity-100 transition-opacity">
+                    <a href="https://github.com/mohamadnadim12" target="_blank" class="text-[10px] text-gray-500 hover:text-white flex items-center justify-center gap-1">
+                        <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" /></svg>
+                        Developed by Mohamad Nadim
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notification Toast -->
+        <div id="toast" class="fixed top-8 left-1/2 -translate-x-1/2 bg-gray-900/95 text-white px-6 py-3 rounded-full shadow-2xl flex items-center gap-3 transform -translate-y-24 transition-all duration-300 z-50 border border-gray-700">
+            <div class="bg-green-500/20 p-1 rounded-full">
+                <svg class="w-4 h-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+            </div>
+            <span class="text-sm font-medium">تم نسخ المبلغ الجديد</span>
+        </div>
+
+    </div>
+
+    <script>
+        // --- Tafqeet Logic ---
+        function tafqeet(number) {
+            if (number === 0) return "صفر ليرة سورية";
+            
+            const units = ["", "واحد", "اثنان", "ثلاثة", "أربعة", "خمسة", "ستة", "سبعة", "ثمانية", "تسعة"];
+            const teens = ["عشرة", "أحد عشر", "اثنا عشر", "ثلاثة عشر", "أربعة عشر", "خمسة عشر", "ستة عشر", "سبعة عشر", "ثمانية عشر", "تسعة عشر"];
+            const tens = ["", "عشرة", "عشرون", "ثلاثون", "أربعون", "خمسون", "ستون", "سبعون", "ثمانون", "تسعون"];
+            const hundreds = ["", "مئة", "مئتان", "ثلاثمئة", "أربعمئة", "خمسمئة", "ستمئة", "سبعمئة", "ثمانمئة", "تسعمئة"];
+            
+            function processChunk(num) {
+                let str = "";
+                let h = Math.floor(num / 100);
+                let r = num % 100;
+                if (h > 0) str += hundreds[h] + " ";
+                if (r > 0) {
+                    if (h > 0) str += "و";
+                    if (r < 10) str += units[r];
+                    else if (r < 20) str += teens[r - 10];
+                    else {
+                        let u = r % 10;
+                        let t = Math.floor(r / 10);
+                        if (u > 0) str += units[u] + " و";
+                        str += tens[t];
+                    }
+                }
+                return str.trim();
+            }
+
+            let integerPart = Math.floor(number);
+            let decimalPart = Math.round((number - integerPart) * 100);
+            
+            if(integerPart === 0 && decimalPart > 0) return ""; 
+
+            let str = "";
+            let billions = Math.floor(integerPart / 1000000000); integerPart %= 1000000000;
+            let millions = Math.floor(integerPart / 1000000); integerPart %= 1000000;
+            let thousands = Math.floor(integerPart / 1000); integerPart %= 1000;
+            let rest = integerPart;
+
+            if (billions > 0) str += processChunk(billions) + " مليار" + (billions > 10 ? "" : " ") + " و";
+            if (millions > 0) {
+                 let s = processChunk(millions);
+                 str += s + (millions === 1 ? " مليون" : millions === 2 ? " مليونان" : millions <= 10 ? " ملايين" : " مليون") + " و";
+            }
+            if (thousands > 0) {
+                 let s = processChunk(thousands);
+                 str += (thousands === 1 ? "ألف" : thousands === 2 ? "ألفان" : s + (thousands <= 10 ? " آلاف" : " ألف")) + " و";
+            }
+            if (rest > 0) str += processChunk(rest);
+
+            str = str.trim();
+            if (str.endsWith("و")) str = str.slice(0, -1).trim();
+
+            let result = str + " ليرة سورية";
+            if (decimalPart > 0) {
+                if (str.length > 0) result += " و";
+                result += processChunk(decimalPart) + " قرش";
+            }
+            return result;
+        }
+
+        // --- Core Application Logic ---
+        const oldInput = document.getElementById('oldInput');
+        const newInput = document.getElementById('newInput');
+        const tafqeetResult = document.getElementById('tafqeetResult');
+        const historyList = document.getElementById('historyList');
+        const emptyMsg = document.getElementById('emptyMsg');
+        const RATE = 100;
+        let historyTimer;
+
+        const clean = (val) => parseFloat(val.replace(/,/g, '').replace(/[^\d.-]/g, '')) || 0;
+        const format = (val) => {
+            if (val % 1 !== 0) return val.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+            return val.toLocaleString('en-US');
+        };
+
+        function handleInput(source) {
+            let val;
+            if (source === 'old') {
+                val = clean(oldInput.value);
+                let res = val / RATE;
+                newInput.value = res === 0 ? '' : format(res);
+                updateTafqeet(res);
+            } else {
+                val = clean(newInput.value);
+                let res = val * RATE;
+                oldInput.value = res === 0 ? '' : format(res);
+                updateTafqeet(val);
+            }
+            
+            if(val > 0) {
+                clearTimeout(historyTimer);
+                historyTimer = setTimeout(() => addToHistory(clean(oldInput.value), clean(newInput.value)), 1500);
+            } else {
+                tafqeetResult.textContent = "صفر ليرة سورية";
+            }
+        }
+
+        function updateTafqeet(num) {
+            if (num === 0) {
+                tafqeetResult.textContent = "صفر ليرة سورية";
+                tafqeetResult.className = "text-sm font-medium text-gray-400 text-center leading-relaxed transition-colors";
+                return;
+            }
+            tafqeetResult.textContent = tafqeet(num);
+            tafqeetResult.className = "text-sm font-bold text-flag-green text-center leading-relaxed transition-colors";
+        }
+
+        function quickAdd(amount) {
+            let current = clean(oldInput.value);
+            let newVal = current + amount;
+            oldInput.value = format(newVal);
+            handleInput('old');
+        }
+
+        function resetAll() {
+            oldInput.value = '';
+            newInput.value = '';
+            tafqeetResult.textContent = "صفر ليرة سورية";
+            tafqeetResult.className = "text-sm font-medium text-gray-400 text-center leading-relaxed";
+            oldInput.focus();
+        }
+
+        function addToHistory(oldVal, newVal) {
+            if(emptyMsg) emptyMsg.style.display = 'none';
+            
+            const li = document.createElement('li');
+            li.className = "flex justify-between items-center bg-gray-800 p-3 rounded-lg border border-gray-700 hover:bg-gray-700 transition-colors animate-fade-in group";
+            li.innerHTML = `
+                <div class="flex flex-col text-right">
+                    <span class="text-[10px] text-gray-500 font-bold">قديم</span>
+                    <span class="text-xs text-gray-300 font-mono">${format(oldVal)}</span>
+                </div>
+                <div class="text-flag-gold opacity-50">
+                    <svg class="w-3 h-3 transform rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                </div>
+                <div class="flex flex-col text-left">
+                    <span class="text-[10px] text-green-500/70 font-bold">جديد</span>
+                    <span class="text-sm text-green-400 font-bold font-mono group-hover:text-green-300 transition-colors">${format(newVal)}</span>
+                </div>
+            `;
+            
+            historyList.prepend(li);
+            if(historyList.children.length > 10) historyList.removeChild(historyList.lastChild);
+        }
+
+        function clearHistory() {
+            historyList.innerHTML = '';
+            const msg = document.createElement('li');
+            msg.id = 'emptyMsg';
+            msg.className = "text-center text-xs text-gray-600 py-4 italic";
+            msg.textContent = "لم تقم بأي عملية تحويل بعد";
+            historyList.appendChild(msg);
+        }
+
+        function copyResult() {
+            if(!newInput.value) return;
+            
+            // Clipboard API Logic
+            const val = newInput.value;
+            const temp = document.createElement('textarea');
+            temp.value = val;
+            document.body.appendChild(temp);
+            temp.select();
+            document.execCommand('copy');
+            document.body.removeChild(temp);
+
+            const toast = document.getElementById('toast');
+            toast.classList.remove('-translate-y-24');
+            toast.classList.add('translate-y-0');
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0');
+                toast.classList.add('-translate-y-24');
+            }, 2500);
+        }
+    </script>
+</body>
+</html>
